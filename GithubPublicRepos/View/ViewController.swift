@@ -24,6 +24,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         titleLabel.text = "Public repositories for user: \(username)"
         // Do any additional setup after loading the view, typically from a nib.
         reloadSavedRepos()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        reloadDataFromServer()
+    }
+    
+    func reloadSavedRepos() {
+        repos = RepoPresenter().loadReposForAccount(account: username)
+    }
+    
+    func reloadDataFromServer() {
         RepoPresenter().getReposForAccount(account: username, success: { (result) in
             self.repos = result
             self.tableView.reloadData()
@@ -32,10 +43,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
-    }
-
-    func reloadSavedRepos() {
-        repos = RepoPresenter().loadReposForAccount(account: username)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -78,7 +85,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UIApplication.shared.open(URL(string: repos[indexPath.row].url!)!, options: [:], completionHandler: nil)
+        UIApplication.shared.open(URL(string: repos[indexPath.row].htmlURL!)!, options: [:], completionHandler: nil)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

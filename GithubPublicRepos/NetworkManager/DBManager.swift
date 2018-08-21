@@ -17,10 +17,11 @@ class DBManager: NSObject {
     
     static let shared: DBManager = DBManager()
     
-    func saveRepos(repos: [Repo]) {
+    func saveRepos(repos: [Repo], update: Bool) {
         try! uiRealm.write({
             print("File URL: \(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")")
-            uiRealm.add(repos, update: true)
+            uiRealm.deleteAll()
+            uiRealm.add(repos, update: update)
         })
     }
     
